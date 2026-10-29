@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recuperação de BM · Único Contato</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F3EE;
+    --surface:#FFFFFF;
+    --border:#E8E4DD;
+    --green:#22C55E;
+    --green-dark:#15803D;
+    --green-hover:#1EB054;
+    --navy:#0D2240;
+    --text:#0D0D0D;
+    --text-2:rgba(13,13,13,.6);
+    --deep:#050911;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:'Sora',sans-serif;font-weight:800;line-height:1.15;letter-spacing:-.02em}
+  h1{font-size:clamp(32px,5vw,48px);text-align:center}
+  h2{font-size:clamp(26px,3.5vw,36px);text-align:center;margin-bottom:12px}
+  h3{font-size:18px;font-weight:700}
+  .accent{color:var(--green)}
+  .container{max-width:980px;margin:0 auto;padding:0 24px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(245,243,238,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;max-width:980px;margin:0 auto}
+  .logo{display:flex;align-items:center;gap:12px;font-family:'Sora';font-weight:800;font-size:15px;color:var(--navy)}
+  .logo img{height:36px;width:auto}
+  .nav-cta{background:var(--green);color:#fff;border:none;border-radius:999px;padding:11px 20px;font-family:'Manrope';font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 22px rgba(34,197,94,.35);transition:.2s}
+  .nav-cta:hover{background:var(--green-hover);transform:translateY(-1px)}
+
+  /* Hero */
+  .hero{padding:80px 0 60px;text-align:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);color:var(--green-dark);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:600;margin-bottom:24px}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .subtitle{color:var(--text-2);font-size:18px;max-width:620px;margin:20px auto 0}
+
+  /* Sections */
+  section{padding:40px 0}
+  .section-head{text-align:center;margin-bottom:36px}
+  .section-head p{color:var(--text-2);max-width:620px;margin:10px auto 0}
+
+  /* Cards */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:28px;box-shadow:0 1px 2px rgba(13,34,64,.04),0 8px 24px rgba(13,34,64,.04)}
+  .card + .card{margin-top:20px}
+  .card-title{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .card-title .icon{width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid var(--border);display:grid;place-items:center;color:var(--navy);flex-shrink:0}
+  .card-title .icon svg{width:20px;height:20px;stroke-width:1.8}
+
+  /* Checklist */
+  .checklist{display:grid;gap:10px}
+  .check-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:.2s;background:#fff}
+  .check-item:hover{border-color:#c9c3b8}
+  .check-item.checked{border-color:var(--green);background:rgba(34,197,94,.04)}
+  .check-box{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--border);display:grid;place-items:center;flex-shrink:0;transition:.2s;margin-top:2px}
+  .check-item.checked .check-box{background:var(--green);border-color:var(--green)}
+  .check-box svg{width:14px;height:14px;stroke:#fff;stroke-width:3;opacity:0;transition:.15s}
+  .check-item.checked .check-box svg{opacity:1}
+  .check-body h4{font-family:'Sora';font-weight:700;font-size:15px;margin-bottom:3px}
+  .check-body p{font-size:13px;color:var(--text-2);line-height:1.5}
+  .progress-wrap{margin-bottom:24px}
+  .progress-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:8px}
+  .progress-label span:last-child{color:var(--green-dark)}
+  .progress-bar{height:8px;background:var(--border);border-radius:999px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--green);border-radius:999px;transition:width .4s ease;width:0%}
+
+  /* Form */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-grid .full{grid-column:1/-1}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;letter-spacing:.02em;text-transform:uppercase}
+  .field input,.field textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'Manrope';font-size:14px;background:#fff;color:var(--text);transition:.2s}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.12)}
+  .field textarea{resize:vertical;min-height:70px}
+
+  /* Letter preview */
+  .letter-preview{background:#fff;border:1px solid var(--border);border-radius:18px;padding:32px;margin-top:20px;font-size:14px;line-height:1.75;color:#111;white-space:pre-wrap;font-family:'Manrope'}
+  .letter-preview strong{color:var(--navy)}
+
+  /* Buttons */
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .btn{border:none;border-radius:999px;padding:12px 22px;font-family:'Manrope';font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+  .btn-primary{background:var(--green);color:#fff;box-shadow:0 8px 22px rgba(34,197,94,.35)}
+  .btn-primary:hover{background:var(--green-hover);transform:translateY(-1px)}
+  .btn-secondary{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+  .btn-secondary:hover{background:var(--navy);color:#fff}
+  .btn svg{width:15px;height:15px}
+
+  /* Steps */
+  .steps{counter-reset:step;display:grid;gap:14px}
+  .step{display:flex;gap:18px;padding:20px;border:1px solid var(--border);border-radius:16px;background:#fff;counter-increment:step}
+  .step::before{content:counter(step);font-family:'Sora';font-weight:800;font-size:20px;color:#fff;background:var(--navy);width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}
+  .step p{color:var(--text-2);font-size:14px}
+  .step p a{color:var(--green-dark);font-weight:600;text-decoration:none}
+  .step p a:hover{text-decoration:underline}
+
+  /* Navy section */
+  .navy-section{background:var(--navy);border-radius:28px;padding:50px 36px;margin:40px 0;color:#fff;position:relative;overflow:hidden}
+  .navy-section h2{color:#fff;margin-bottom:8px}
+  .navy-section h2 .accent{color:var(--green)}
+  .navy-section .subtitle{color:rgba(255,255,255,.75)}
+  .navy-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:32px}
+  .navy-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px;backdrop-filter:blur(8px)}
+  .navy-card .num{font-family:'Sora';font-weight:800;font-size:36px;color:var(--green);line-height:1}
+  .navy-card h4{font-family:'Sora';font-weight:700;font-size:15px;margin:8px 0 6px}
+  .navy-card p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.5}
+
+  /* Warning */
+  .warn{display:flex;gap:14px;padding:18px 20px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.25);border-radius:14px;margin-top:20px}
+  .warn svg{flex-shrink:0;width:22px;height:22px;stroke:var(--green-dark);margin-top:1px}
+  .warn strong{display:block;font-size:14px;color:var(--green-dark);margin-bottom:2px}
+  .warn p{font-size:13px;color:var(--text-2);line-height:1.5}
+
+  /* Toast */
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:#fff;padding:14px 22px;border-radius:999px;font-weight:600;font-size:14px;box-shadow:0 12px 30px rgba(13,34,64,.3);z-index:100;opacity:0;transition:.3s;display:flex;align-items:center;gap:10px}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast svg{width:18px;height:18px;stroke:var(--green)}
+
+  /* Footer */
+  footer{padding:50px 0 40px;text-align:center;color:var(--text-2);font-size:13px;border-top:1px solid var(--border);margin-top:40px}
+  footer strong{color:var(--navy);font-family:'Sora';font-weight:700}
+
+  @media (max-width:640px){
+    .form-grid{grid-template-columns:1fr}
+    .navy-section{padding:40px 22px;border-radius:22px}
+    .card{padding:22px;border-radius:18px}
+    .nav-cta span{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">
+      <img src="https://ascoferj.com.br/wp-content/uploads/2024/08/grupo-unico-contato-farmaclube.webp" alt="Único Contato">
+      <span>Suporte Meta · Recuperação BM</span>
+    </div>
+    <button class="nav-cta" onclick="document.getElementById('carta').scrollIntoView({behavior:'smooth'})">
+      Gerar carta <span>↗</span>
+    </button>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="badge"><span class="dot"></span> Procedimento guiado · falecimento do administrador</span>
+    <h1>Recuperação do <span class="accent">Gerenciador de Negócios</span> da Meta</h1>
+    <p class="subtitle">Um guia interativo para você reunir os documentos, gerar a carta oficial e abrir a disputa administrativa no suporte empresarial da Meta — com a orientação do time Único Contato.</p>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section>
+    <div class="section-head">
+      <h2>Checklist de <span class="accent">documentos</span></h2>
+      <p>Marque cada item conforme for separando. O progresso é salvo automaticamente neste navegador.</p>
+    </div>
+
+    <div class="card">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Progresso da documentação</span>
+          <span id="progressText">0 de 6</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="checklist" id="checklist">
+        <label class="check-item" data-id="carta">
+          <span class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg></span>
+          <div class="check-body">
+            <h4>Carta de solicitação</h4>
+            <p>Em papel timbrado, com assinatura manuscrita do responsável legal. Gere abaixo e imprima.</p>
+          </div>
+        </label>
+        <label class="check-item" data-id="cnpj">
+          <span class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg></span>
+          <div class="check-body">
+            <h4>Cartão CNPJ</h4>
+            <p>Documento atualizado da empresa, emitido pelo portal da Receita Federal.</p>
+          </div>
+        </label>
+        <label class="check-item" data-id="rg">
+          <span class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg></span>
+          <div class="check-body">
+            <h4>Documento de identidade</h4>
+            <p>RG ou CNH válida do responsável que assina a carta.</p>
+          </div>
+        </label>
+        <label class="check-item" data-id="obito">
+          <span class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg></span>
+          <div class="check-body">
+            <h4>Certidão de óbito</h4>
+            <p>Documento essencial para comprovar o motivo da perda de acesso administrativo.</p>
+          </div>
+        </label>
+        <label class="check-item" data-id="faturas">
+          <span class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg></span>
+          <div class="check-body">
+            <h4>Comprovantes das contas de anúncios</h4>
+            <p>Últimas três faturas/extratos e os quatro últimos dígitos dos cartões utilizados.</p>
+          </div>
+        </label>
+        <label class="check-item" data-id="empresa">
+          <span class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg></span>
+          <div class="check-body">
+            <h4>Comprovante da empresa</h4>
+            <p>Alvará, licença sanitária, certificado fiscal ou contrato social (ajuda a comprovar poderes do solicitante).</p>
+          </div>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTA -->
+  <section id="carta">
+    <div class="section-head">
+      <h2>Gerador da <span class="accent">carta oficial</span></h2>
+      <p>Preencha os campos abaixo. A carta é montada em tempo real — depois é só copiar, colar em papel timbrado, assinar e anexar.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M16 13H8M16 17H8M10 9H8"/></svg></span>
+        <h3>Dados do documento</h3>
+      </div>
+
+      <div class="form-grid">
+        <div class="field full">
+          <label>Nome completo do solicitante</label>
+          <input type="text" id="f_solicitante" placeholder="Ex.: João da Silva">
+        </div>
+        <div class="field">
+          <label>RG</label>
+          <input type="text" id="f_rg" placeholder="00.000.000-0">
+        </div>
+        <div class="field">
+          <label>CPF</label>
+          <input type="text" id="f_cpf" placeholder="000.000.000-00">
+        </div>
+        <div class="field">
+          <label>Qualificação</label>
+          <input type="text" id="f_qualif" placeholder="Proprietário(a) / Sócio(a) / Representante legal">
+        </div>
+        <div class="field">
+          <label>ID do BM</label>
+          <input type="text" id="f_bm" placeholder="Ex.: 123456789012345">
+        </div>
+        <div class="field">
+          <label>Razão social</label>
+          <input type="text" id="f_razao" placeholder="Empresa Exemplo Ltda.">
+        </div>
+        <div class="field">
+          <label>Nome fantasia</label>
+          <input type="text" id="f_fantasia" placeholder="Exemplo Store">
+        </div>
+        <div class="field">
+          <label>CNPJ</label>
+          <input type="text" id="f_cnpj" placeholder="00.000.000/0001-00">
+        </div>
+        <div class="field">
+          <label>Nome do administrador falecido</label>
+          <input type="text" id="f_falecido" placeholder="Nome completo">
+        </div>
+        <div class="field">
+          <label>Data do falecimento</label>
+          <input type="text" id="f_data_obito" placeholder="DD de mês de AAAA">
+        </div>
+        <div class="field">
+          <label>Nome do novo administrador</label>
+          <input type="text" id="f_novo" placeholder="Nome completo">
+        </div>
+        <div class="field">
+          <label>Link do perfil Facebook</label>
+          <input type="text" id="f_perfil" placeholder="https://facebook.com/...">
+        </div>
+        <div class="field">
+          <label>E-mail do perfil</label>
+          <input type="email" id="f_email" placeholder="email@exemplo.com">
+        </div>
+        <div class="field">
+          <label>Cidade</label>
+          <input type="text" id="f_cidade" placeholder="São Paulo">
+        </div>
+        <div class="field">
+          <label>Data da carta</label>
+          <input type="text" id="f_data" placeholder="30 de outubro de 2026">
+        </div>
+        <div class="field">
+          <label>Nome do responsável legal</label>
+          <input type="text" id="f_resp" placeholder="Nome para assinatura">
+        </div>
+        <div class="field">
+          <label>Cargo</label>
+          <input type="text" id="f_cargo" placeholder="Diretor(a) / Sócio(a)">
+        </div>
+        <div class="field full">
+          <label>Telefone e e-mail de contato</label>
+          <input type="text" id="f_contato" placeholder="(00) 00000-0000 · email@empresa.com">
+        </div>
+      </div>
+
+      <div class="letter-preview" id="letterPreview"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="copyLetter()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar carta completa
+        </button>
+        <button class="btn btn-secondary" onclick="downloadTxt()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Baixar .txt
+        </button>
+        <button class="btn btn-secondary" onclick="clearForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Limpar campos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAVY SECTION -->
+  <section>
+    <div class="navy-section">
+      <div class="section-head">
+        <h2>Como abrir a <span class="accent">solicitação</span></h2>
+        <p class="subtitle">O caminho certo dentro do suporte empresarial da Meta, passo a passo.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h4 style="color:#fff;margin-bottom:4px">Acesse o Meta Business Support Home</h4>
+            <p>Entre em <a href="https://www.facebook.com/business-support-home/" target="_blank" rel="noopener">facebook.com/business-support-home</a> usando seu próprio perfil do Facebook.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h4 style="color:#fff;margin-bottom:4px">Localize a categoria correta</h4>
+            <p>Procure por <strong style="color:var(--green)">"Business Manager admin dispute"</strong> ou <strong style="color:var(--green)">"disputa administrativa do Gerenciador de Negócios"</strong>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h4 style="color:#fff;margin-bottom:4px">Explique a situação</h4>
+            <p>Informe que o administrador faleceu e que o representante legal da empresa precisa recuperar o controle total do BM — não o acesso à conta pessoal.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h4 style="color:#fff;margin-bottom:4px">Envie a documentação</h4>
+            <p>Anexe a carta assinada e todos os itens do checklist acima em formato PDF legível.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="navy-cards">
+        <div class="navy-card">
+          <div class="num">6</div>
+          <h4>Documentos essenciais</h4>
+          <p>Lista mínima exigida para abrir a disputa administrativa.</p>
+        </div>
+        <div class="navy-card">
+          <div class="num">1</div>
+          <h4>Carta assinada</h4>
+          <p>Em papel timbrado, com assinatura manuscrita do responsável.</p>
+        </div>
+        <div class="navy-card">
+          <div class="num">~15d</div>
+          <h4>Prazo estimado</h4>
+          <p>Resposta da Meta varia conforme a complexidade da análise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVISO -->
+  <section>
+    <div class="card">
+      <div class="card-title">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></span>
+        <h3>Ponto importante</h3>
+      </div>
+      <p style="color:var(--text-2);font-size:15px">Não solicite em hipótese alguma a recuperação de senha ou o acesso ao <strong style="color:var(--navy)">perfil pessoal</strong> da pessoa falecida. O pedido deve ser direcionado exclusivamente à recuperação do controle administrativo do BM da empresa. A disponibilidade da opção e a aprovação dependem da análise da Meta — o envio da documentação não garante a recuperação.</p>
+      
+      <div class="warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div>
+          <strong>Suporte Único Contato</strong>
+          <p>Caso a Meta peça documentos adicionais ou negue a primeira análise, nos avise. Temos um fluxo de reenvio estruturado para aumentar a taxa de sucesso em segundas análises.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>Desenvolvido por <strong>Grupo Único Contato</strong> · Suporte especializado em Meta Business</p>
+    <p style="margin-top:6px;font-size:12px;opacity:.7">Documento confidencial · Uso exclusivo do cliente destinatário</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+  <span id="toastMsg">Copiado!</span>
+</div>
+
+<script>
+  const fields = ['f_solicitante','f_rg','f_cpf','f_qualif','f_bm','f_razao','f_fantasia','f_cnpj','f_falecido','f_data_obito','f_novo','f_perfil','f_email','f_cidade','f_data','f_resp','f_cargo','f_contato'];
+
+  function buildLetter(){
+    const g = id => (document.getElementById(id)?.value || '').trim() || '[___________]';
+    return `À Meta Platforms, Inc.
+
+Assunto: Solicitação de recuperação de acesso administrativo ao Gerenciador de Negócios
+
+Eu, ${g('f_solicitante')}, portador(a) do RG nº ${g('f_rg')} e CPF nº ${g('f_cpf')}, na qualidade de ${g('f_qualif')} da empresa ${g('f_razao')}, nome fantasia ${g('f_fantasia')}, inscrita no CNPJ sob o nº ${g('f_cnpj')}, declaro que a empresa perdeu o acesso administrativo ao Gerenciador de Negócios da Meta, identificado pelo ID ${g('f_bm')}.
+
+O administrador responsável pelo referido Gerenciador de Negócios era ${g('f_falecido')}, cujo falecimento ocorreu em ${g('f_data_obito')}, conforme certidão de óbito anexa. Em razão desse ocorrido, a empresa não possui mais acesso administrativo ao ambiente e necessita restabelecer o controle para dar continuidade às suas atividades comerciais e de marketing digital.
+
+Diante disso, solicito que seja concedido controle total do Gerenciador de Negócios de ID ${g('f_bm')} ao perfil ativo ${g('f_novo')}, cujo perfil no Facebook pode ser acessado pelo link ${g('f_perfil')} e cujo e-mail associado é ${g('f_email')}.
+
+Declaro que o solicitante está autorizado a administrar os ativos digitais da empresa e que esta solicitação tem como objetivo recuperar o acesso empresarial, sem solicitar acesso à conta pessoal da pessoa falecida.
+
+Eu, ${g('f_resp')}, declaro, sob as penalidades legais cabíveis, que as informações apresentadas são exatas e verdadeiras.
+
+Local e data: ${g('f_cidade')}, ${g('f_data')}
+
+Assinatura manuscrita: __________________________________
+
+Nome completo: ${g('f_resp')}
+Cargo: ${g('f_cargo')}
+Telefone e e-mail para contato: ${g('f_contato')}`;
+  }
+
+  function updatePreview(){
+    document.getElementById('letterPreview').textContent = buildLetter();
+    saveFields();
+  }
+
+  fields.forEach(id => {
+    document.getElementById(id)?.addEventListener('input', updatePreview);
+  });
+
+  function saveFields(){
+    const data = {};
+    fields.forEach(id => data[id] = document.getElementById(id).value);
+    localStorage.setItem('uc_bm_form', JSON.stringify(data));
+  }
+
+  function loadFields(){
+    try{
+      const data = JSON.parse(localStorage.getItem('uc_bm_form') || '{}');
+      fields.forEach(id => { if(data[id]) document.getElementById(id).value = data[id]; });
+    }catch(e){}
+    updatePreview();
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function copyLetter(){
+    navigator.clipboard.writeText(buildLetter()).then(() => showToast('Carta copiada para a área de transferência'));
+  }
+
+  function downloadTxt(){
+    const blob = new Blob([buildLetter()], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'carta-recuperacao-bm.txt';
+    a.click(); URL.revokeObjectURL(url);
+    showToast('Arquivo .txt baixado');
+  }
+
+  function clearForm(){
+    if(!confirm('Limpar todos os campos?')) return;
+    fields.forEach(id => document.getElementById(id).value = '');
+    localStorage.removeItem('uc_bm_form');
+    updatePreview();
+    showToast('Campos limpos');
+  }
+
+  // Checklist
+  const items = document.querySelectorAll('.check-item');
+  function saveChecks(){
+    const state = {};
+    items.forEach(it => state[it.dataset.id] = it.classList.contains('checked'));
+    localStorage.setItem('uc_bm_checks', JSON.stringify(state));
+    updateProgress();
+  }
+  function updateProgress(){
+    const total = items.length;
+    const done = document.querySelectorAll('.check-item.checked').length;
+    document.getElementById('progressFill').style.width = (done/total*100) + '%';
+    document.getElementById('progressText').textContent = `${done} de ${total}`;
+  }
+  items.forEach(it => {
+    it.addEventListener('click', e => {
+      e.preventDefault();
+      it.classList.toggle('checked');
+      saveChecks();
+    });
+  });
+  try{
+    const cs = JSON.parse(localStorage.getItem('uc_bm_checks') || '{}');
+    items.forEach(it => { if(cs[it.dataset.id]) it.classList.add('checked'); });
+  }catch(e){}
+  updateProgress();
+
+  loadFields();
+</script>
+
+</body>
+</html>
